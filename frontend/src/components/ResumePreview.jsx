@@ -3,14 +3,17 @@ import './ResumePreview.css'
 
 function ResumePreview() {
   const { resumeData } = useResume()
-  const { contact, summary, skills, education, internship, certificates } = resumeData
+  const { contact, summary, skills, education, projects, internship, certificates, languages, customSections } = resumeData
 
   return (
     <div className="resume-preview">
-      <div className="resume-paper">
+      <div className="resume-paper" id="resume-to-print">
         {/* Contact / Header Section */}
         <header className="resume-header">
           <h1 className="resume-name">{contact.name || 'Your Name'}</h1>
+          {contact.jobTitle && (
+            <div className="resume-job-title">{contact.jobTitle}</div>
+          )}
           <div className="contact-info">
             {contact.email && <span>{contact.email}</span>}
             {contact.phone && <span>{contact.phone}</span>}
@@ -53,6 +56,32 @@ function ResumePreview() {
           </section>
         )}
 
+        {/* Projects Section */}
+        {projects.length > 0 && (
+          <section className="resume-section">
+            <h2 className="section-title">Projects</h2>
+            {projects.map((project, index) => (
+              <div key={index} className="project-item">
+                <div className="item-header">
+                  <strong>{project.name}</strong>
+                  <span className="item-date">{project.duration}</span>
+                </div>
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="item-tech">
+                    Technologies: {Array.isArray(project.technologies) 
+                      ? project.technologies.join(', ')
+                      : project.technologies
+                    }
+                  </div>
+                )}
+                {project.description && (
+                  <p className="item-description">{project.description}</p>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
         {/* Internship Section */}
         {internship.length > 0 && (
           <section className="resume-section">
@@ -88,8 +117,31 @@ function ResumePreview() {
           </section>
         )}
 
+        {/* Languages Section */}
+        {languages.length > 0 && (
+          <section className="resume-section">
+            <h2 className="section-title">Languages</h2>
+            <div className="languages-list">
+              {languages.map((lang, index) => (
+                <span key={index} className="language-item-preview">
+                  {lang.name} ({lang.proficiency})
+                  {index < languages.length - 1 && ', '}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Custom Sections */}
+        {customSections.length > 0 && customSections.map((section, index) => (
+          <section key={index} className="resume-section">
+            <h2 className="section-title">{section.title}</h2>
+            <p className="custom-content">{section.content}</p>
+          </section>
+        ))}
+
         {/* Empty State */}
-        {!summary && skills.length === 0 && education.length === 0 && (
+        {!summary && skills.length === 0 && education.length === 0 && projects.length === 0 && (
           <div className="empty-preview">
             <p>Start filling in your details to see the preview</p>
           </div>

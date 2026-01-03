@@ -27,6 +27,20 @@ function Contact() {
         </div>
 
         <div className="form-group">
+          <label htmlFor="jobTitle">Desired Job Title</label>
+          <input
+            type="text"
+            id="jobTitle"
+            name="jobTitle"
+            value={contact.jobTitle}
+            onChange={handleChange}
+            placeholder="e.g., Software Developer, Web Developer"
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
           <label htmlFor="email">Email Address *</label>
           <input
             type="email"
@@ -37,9 +51,7 @@ function Contact() {
             placeholder="e.g., arun@gmail.com"
           />
         </div>
-      </div>
 
-      <div className="form-row">
         <div className="form-group">
           <label htmlFor="phone">Phone Number</label>
           <input
@@ -51,7 +63,9 @@ function Contact() {
             placeholder="e.g., 9876543210"
           />
         </div>
+      </div>
 
+      <div className="form-row">
         <div className="form-group">
           <label htmlFor="location">Location</label>
           <input
@@ -63,9 +77,7 @@ function Contact() {
             placeholder="e.g., Chennai, India"
           />
         </div>
-      </div>
 
-      <div className="form-row">
         <div className="form-group">
           <label htmlFor="linkedin">LinkedIn Profile (optional)</label>
           <input
@@ -77,18 +89,18 @@ function Contact() {
             placeholder="e.g., linkedin.com/in/arunkumar"
           />
         </div>
+      </div>
 
-        <div className="form-group">
-          <label htmlFor="github">GitHub Profile (optional)</label>
-          <input
-            type="url"
-            id="github"
-            name="github"
-            value={contact.github}
-            onChange={handleChange}
-            placeholder="e.g., github.com/arunkumar"
-          />
-        </div>
+      <div className="form-group">
+        <label htmlFor="github">GitHub Profile (optional)</label>
+        <input
+          type="url"
+          id="github"
+          name="github"
+          value={contact.github}
+          onChange={handleChange}
+          placeholder="e.g., github.com/arunkumar"
+        />
       </div>
 
       <div className="tip-box">

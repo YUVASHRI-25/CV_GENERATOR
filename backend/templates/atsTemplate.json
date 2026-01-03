@@ -10,8 +10,11 @@
     "summary",
     "skills",
     "education",
+    "projects",
     "internship",
-    "certificates"
+    "certificates",
+    "languages",
+    "custom"
   ],
   
   "styling": {
@@ -69,6 +72,23 @@
       "required": false,
       "fields": ["name", "issuer", "date"],
       "title": "Certifications"
+    },
+    "projects": {
+      "required": false,
+      "fields": ["name", "technologies", "duration", "description"],
+      "optionalFields": ["link"],
+      "bulletPoints": true,
+      "title": "Projects"
+    },
+    "languages": {
+      "required": false,
+      "fields": ["name", "proficiency"],
+      "title": "Languages"
+    },
+    "custom": {
+      "required": false,
+      "fields": ["title", "content"],
+      "title": "Additional Information"
     }
   },
   

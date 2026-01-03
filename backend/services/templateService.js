@@ -39,10 +39,16 @@ const formatSection = (sectionName, data) => {
       return formatSkills(data.skills, data.formattedSkills);
     case 'education':
       return formatEducation(data.education);
+    case 'projects':
+      return formatProjects(data.projects);
     case 'internship':
       return formatInternship(data.internship);
     case 'certificates':
       return formatCertificates(data.certificates);
+    case 'languages':
+      return formatLanguages(data.languages);
+    case 'custom':
+      return formatCustomSections(data.customSections);
     default:
       return null;
   }
@@ -57,8 +63,10 @@ const formatContact = (contact) => {
   return {
     type: 'contact',
     title: contact.name || 'Name Not Provided',
+    jobTitle: contact.jobTitle || null,
     content: {
       name: contact.name,
+      jobTitle: contact.jobTitle,
       email: contact.email,
       phone: contact.phone,
       linkedin: contact.linkedin || null,
@@ -173,7 +181,59 @@ const formatCertificates = (certificates) => {
     content: formatted
   };
 };
+Format projects section
+ */
+const formatProjects = (projects) => {
+  if (!projects || projects.length === 0) return null;
 
+  const formatted = projects.map(project => ({
+    name: project.name,
+    technologies: project.technologies,
+    duration: project.duration,
+    description: project.description,
+    link: project.link || null
+  }));
+
+  return {
+    type: 'projects',
+    title: 'Projects',
+    content: formatted
+  };
+};
+
+/**
+ * Format languages section
+ */
+const formatLanguages = (languages) => {
+  if (!languages || languages.length === 0) return null;
+
+  return {
+    type: 'languages',
+    title: 'Languages',
+    content: languages.map(lang => ({
+      name: lang.name,
+      proficiency: lang.proficiency
+    }))
+  };
+};
+
+/**
+ * Format custom sections
+ */
+const formatCustomSections = (customSections) => {
+  if (!customSections || customSections.length === 0) return null;
+
+  return {
+    type: 'custom',
+    sections: customSections.map(section => ({
+      title: section.title,
+      content: section.content
+    }))
+  };
+};
+
+/**
+ * 
 /**
  * Convert text to ATS-friendly bullet points
  */

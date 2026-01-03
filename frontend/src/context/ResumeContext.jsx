@@ -8,13 +8,17 @@ const initialResumeData = {
     phone: '',
     linkedin: '',
     github: '',
-    location: ''
+    location: '',
+    jobTitle: ''
   },
   skills: [],
   education: [],
+  projects: [],
   internship: [],
   certificates: [],
-  summary: ''
+  summary: '',
+  languages: [],
+  customSections: []
 }
 
 // Create Context
@@ -118,6 +122,46 @@ export function ResumeProvider({ children }) {
   const removeCertificate = (index) => {
     const updated = resumeData.certificates.filter((_, i) => i !== index)
     updateResumeSection('certificates', updated)
+  }
+
+  // Add project
+  const addProject = (project) => {
+    setResumeData(prev => ({
+      ...prev,
+      projects: [...prev.projects, project]
+    }))
+  }
+
+  // Update project
+  const updateProject = (index, project) => {
+    const updated = [...resumeData.projects]
+    updated[index] = project
+    updateResumeSection('projects', updated)
+  }
+
+  // Remove project
+  const removeProject = (index) => {
+    const updated = resumeData.projects.filter((_, i) => i !== index)
+    updateResumeSection('projects', updated)
+  }
+
+  // Update languages
+  const updateLanguages = (languages) => {
+    updateResumeSection('languages', languages)
+  }
+
+  // Add custom section
+  const addCustomSection = (section) => {
+    setResumeData(prev => ({
+      ...prev,
+      customSections: [...prev.customSections, section]
+    }))
+  }
+
+  // Remove custom section
+  const removeCustomSection = (index) => {
+    const updated = resumeData.customSections.filter((_, i) => i !== index)
+    updateResumeSection('customSections', updated)
   }
 
   // Update summary

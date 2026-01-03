@@ -114,6 +114,29 @@
   font-size: 16px;
 }
 
+.final-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-download {
+  padding: 14px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
 /* Error */
 .error-message {
   background: #fee;

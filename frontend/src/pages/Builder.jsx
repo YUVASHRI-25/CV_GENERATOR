@@ -7,9 +7,11 @@ import ResumePreview from '../components/ResumePreview'
 import Contact from './Builder/Contact'
 import Skills from './Builder/Skills'
 import Education from './Builder/Education'
+import Projects from './Builder/Projects'
 import Internship from './Builder/Internship'
 import Certificates from './Builder/Certificates'
 import Summary from './Builder/Summary'
+import Additional from './Builder/Additional'
 
 import './Builder.css'
 
@@ -17,9 +19,11 @@ const TABS = [
   { id: 'contact', label: 'Contact', icon: '👤' },
   { id: 'skills', label: 'Skills', icon: '💡' },
   { id: 'education', label: 'Education', icon: '🎓' },
+  { id: 'projects', label: 'Projects', icon: '🚀' },
   { id: 'internship', label: 'Internship', icon: '💼' },
   { id: 'certificates', label: 'Certificates', icon: '📜' },
-  { id: 'summary', label: 'Summary', icon: '📝' }
+  { id: 'summary', label: 'Summary', icon: '📝' },
+  { id: 'additional', label: 'Additional', icon: '➕' }
 ]
 
 function Builder() {
@@ -51,13 +55,17 @@ function Builder() {
       const response = await resumeAPI.generate(resumeData)
       if (response.success) {
         setGeneratedResume(response.data)
-        alert('Resume generated successfully! Check the preview.')
+        alert('Resume generated successfully! Click Download PDF to save.')
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to generate resume')
+      setError(err.response?.data?.message || 'Failed to generate resume. You can still download using the PDF button.')
     } finally {
       setGenerating(false)
     }
+  }
+
+  const handleDownloadPDF = () => {
+    window.print()
   }
 
   const renderTabContent = () => {
@@ -68,12 +76,16 @@ function Builder() {
         return <Skills />
       case 'education':
         return <Education />
+      case 'projects':
+        return <Projects />
       case 'internship':
         return <Internship />
       case 'certificates':
         return <Certificates />
       case 'summary':
         return <Summary />
+      case 'additional':
+        return <Additional />
       default:
         return <Contact />
     }
@@ -123,13 +135,22 @@ function Builder() {
             </button>
 
             {currentTabIndex === TABS.length - 1 ? (
-              <button 
-                className="btn btn-primary generate-btn"
-                onClick={handleGenerateResume}
-                disabled={generating}
-              >
-                {generating ? '⏳ Generating...' : '🚀 Generate Resume'}
-              </button>
+              <div className="final-buttons">
+                <button 
+                  className="btn btn-primary generate-btn"
+                  onClick={handleGenerateResume}
+                  disabled={generating}
+                >
+                  {generating ? '⏳ Generating...' : '🚀 Generate Resume'}
+                </button>
+                <button 
+                  className="btn btn-download"
+                  onClick={handleDownloadPDF}
+                  title="Download as PDF"
+                >
+                  📥 Download PDF
+                </button>
+              </div>
             ) : (
               <button 
                 className="btn btn-primary"
