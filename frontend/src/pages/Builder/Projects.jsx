@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useResume } from '../../context/ResumeContext'
+import { saveResume } from '../../api/resumeApi'
 
 function Projects() {
   const { resumeData, addProject, removeProject } = useResume()
@@ -19,15 +20,46 @@ function Projects() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (formData.name) {
-      addProject({
-        ...formData,
-        technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t)
-      })
+    if (!formData.name) {
+      alert('Project name is required')
+      return
+    }
+
+    try {
+      // Format project data for ATS compatibility
+      const newProject = {
+        name: formData.name.trim(),
+        role: 'Developer', // Default role
+        technologies: formData.technologies 
+          ? formData.technologies.split(',').map(t => t.trim()).filter(t => t)
+          : [],
+        duration: formData.duration || 'Present',
+        description: formData.description || '',
+        link: formData.link || '',
+        // Add ATS-friendly fields
+        skills: formData.technologies 
+          ? formData.technologies.split(',').map(t => t.trim()).filter(t => t)
+          : [],
+        responsibilities: formData.description 
+          ? formData.description.split('\n').filter(line => line.trim() !== '')
+          : [],
+        achievements: []
+      }
+      
+      // Add project to the state
+      addProject(newProject)
+      
+      // Save all projects including the new one
+      await handleSaveAll()
+      
+      // Reset form and hide it
       setFormData({ name: '', technologies: '', duration: '', description: '', link: '' })
       setShowForm(false)
+    } catch (error) {
+      console.error('Error saving project:', error)
+      alert('Failed to save project. Please try again.')
     }
   }
 
@@ -36,10 +68,45 @@ function Projects() {
     setShowForm(false)
   }
 
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSaveAll = async () => {
+    if (!resumeData.projects || resumeData.projects.length === 0) {
+      return { success: true };
+    }
+    
+    try {
+      setIsSaving(true);
+      const response = await saveResume({ 
+        ...resumeData,
+        projects: resumeData.projects 
+      });
+      return { success: true, data: response };
+    } catch (error) {
+      console.error('Failed to save projects:', error);
+      throw error;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="tab-section">
-      <h2>🚀 Projects</h2>
-      <p>Add your academic or personal projects to showcase your skills</p>
+      <div className="section-header">
+        <div>
+          <h2>🚀 Projects</h2>
+          <p>Add your academic or personal projects to showcase your skills</p>
+        </div>
+        {resumeData.projects.length > 0 && (
+          <button 
+            className="save-all-btn"
+            onClick={handleSaveAll}
+            disabled={isSaving}
+          >
+            {isSaving ? 'Saving...' : 'Save Projects'}
+          </button>
+        )}
+      </div>
 
       {/* Existing Project Entries */}
       {resumeData.projects.length > 0 && (
@@ -153,7 +220,13 @@ function Projects() {
           </div>
 
           <div className="entry-form-buttons">
-            <button type="submit" className="add-btn">Save Project</button>
+            <button 
+            type="submit" 
+            className="add-btn"
+            disabled={isSaving || !formData.name}
+          >
+            {isSaving ? 'Saving...' : 'Save Project'}
+          </button>
             <button type="button" className="cancel-btn" onClick={handleCancel}>Cancel</button>
           </div>
         </form>
@@ -180,6 +253,36 @@ function Projects() {
       </div>
 
       <style>{`
+        .section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+
+        .save-all-btn {
+          background-color: #667eea;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: background-color 0.2s;
+          white-space: nowrap;
+        }
+
+        .save-all-btn:hover {
+          background-color: #5a67d8;
+        }
+
+        .save-all-btn:disabled {
+          background-color: #a0aec0;
+          cursor: not-allowed;
+        }
+
         .entries-list {
           margin-bottom: 20px;
         }

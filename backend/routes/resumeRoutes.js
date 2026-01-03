@@ -6,6 +6,9 @@ const express = require('express');
 const router = express.Router();
 const resumeController = require('../controllers/resumeController');
 
+// POST /api/resume/save - Save resume data
+router.post('/save', resumeController.saveResume);
+
 // POST /api/resume/generate - Generate complete resume
 router.post('/generate', resumeController.generateResume);
 

@@ -30,28 +30,25 @@ const applyTemplate = (resumeData) => {
  * Format individual section
  */
 const formatSection = (sectionName, data) => {
-  switch (sectionName) {
-    case 'contact':
-      return formatContact(data.contact);
-    case 'summary':
-      return formatSummary(data.summary);
-    case 'skills':
-      return formatSkills(data.skills, data.formattedSkills);
-    case 'education':
-      return formatEducation(data.education);
-    case 'projects':
-      return formatProjects(data.projects);
-    case 'internship':
-      return formatInternship(data.internship);
-    case 'certificates':
-      return formatCertificates(data.certificates);
-    case 'languages':
-      return formatLanguages(data.languages);
-    case 'custom':
-      return formatCustomSections(data.customSections);
-    default:
-      return null;
+  if (!data) return null;
+
+  const sectionFormatters = {
+    contact: formatContact,
+    summary: formatSummary,
+    skills: formatSkills,
+    education: formatEducation,
+    internship: formatInternship,
+    certificates: formatCertificates,
+    projects: formatProjects,
+    languages: formatLanguages
+  };
+
+  const formatter = sectionFormatters[sectionName];
+  if (formatter) {
+    return formatter(data[sectionName] || data);
   }
+  
+  return null;
 };
 
 /**
@@ -182,23 +179,55 @@ const formatCertificates = (certificates) => {
   };
 };
 /**
- * Format projects section
+ * Format projects section for ATS compatibility
  */
 const formatProjects = (projects) => {
   if (!projects || projects.length === 0) return null;
 
-  const formatted = projects.map(project => ({
-    name: project.name,
-    technologies: project.technologies,
-    duration: project.duration,
-    description: project.description,
-    link: project.link || null
-  }));
+  const formatted = projects.map(project => {
+    // Format project description as bullet points for better ATS parsing
+    let description = project.description;
+    if (description && typeof description === 'string') {
+      // Convert newlines to bullet points
+      description = description
+        .split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => line.trim().replace(/^[•\-*]?\s*/, ''))
+        .map(line => `• ${line}`)
+        .join('\n');
+    }
+
+    // Format technologies as comma-separated list
+    let techList = project.technologies;
+    if (Array.isArray(techList)) {
+      techList = techList.join(', ');
+    } else if (!techList) {
+      techList = '';
+    }
+
+    return {
+      name: project.name || 'Project',
+      role: project.role || 'Developer', // Add role if available
+      technologies: techList,
+      duration: project.duration || '',
+      description: description || '',
+      link: project.link || null,
+      // Add additional ATS-friendly fields
+      skills: project.technologies || [],
+      responsibilities: description ? description.split('\n').filter(Boolean) : [],
+      achievements: project.achievements || []
+    };
+  });
 
   return {
     type: 'projects',
     title: 'Projects',
-    content: formatted
+    content: formatted,
+    // Add ATS metadata
+    _ats: {
+      sectionType: 'work_experience',
+      isProject: true
+    }
   };
 };
 
@@ -224,13 +253,12 @@ const formatLanguages = (languages) => {
 const formatCustomSections = (customSections) => {
   if (!customSections || customSections.length === 0) return null;
 
-  return {
+  // Format each custom section to match the expected structure
+  return customSections.map(section => ({
     type: 'custom',
-    sections: customSections.map(section => ({
-      title: section.title,
-      content: section.content
-    }))
-  };
+    title: section.title,
+    content: section.content
+  }));
 };
 
 /**
@@ -293,8 +321,10 @@ const getTemplateStructure = () => {
   };
 };
 
+// Add formatProjects to the exports
 module.exports = {
   applyTemplate,
   validateResumeData,
-  getTemplateStructure
+  getTemplateStructure,
+  formatProjects
 };

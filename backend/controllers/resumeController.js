@@ -11,6 +11,35 @@ const pdfGenerator = require('../utils/pdfGenerator');
  * Generate resume from user data
  * Main endpoint that processes resume data
  */
+/**
+ * Save resume data
+ */
+const saveResume = async (req, res) => {
+  try {
+    const resumeData = req.body;
+    
+    // In a real application, you would save this to a database
+    // For now, we'll just log and return success
+    console.log('📝 Saving resume data:', resumeData);
+    
+    res.json({
+      success: true,
+      message: 'Resume data saved successfully',
+      data: resumeData
+    });
+  } catch (error) {
+    console.error('Save resume error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save resume data',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Generate resume from user data
+ */
 const generateResume = async (req, res) => {
   try {
     const resumeData = req.body;
@@ -128,6 +157,7 @@ const downloadResume = async (req, res) => {
 };
 
 module.exports = {
+  saveResume,
   generateResume,
   previewResume,
   enhanceSummary,
