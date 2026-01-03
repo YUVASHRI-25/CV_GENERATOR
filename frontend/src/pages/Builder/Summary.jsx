@@ -36,10 +36,13 @@ function Summary() {
   // Generate a basic template summary
   const generateTemplateSummary = () => {
     const name = resumeData.contact.name || 'A motivated student'
-    const skills = resumeData.skills.slice(0, 3).join(', ') || 'various technical skills'
+    // Extract skill names from skill objects
+    const skillNames = resumeData.skills.length > 0 
+      ? resumeData.skills.slice(0, 3).map(skill => skill.name).join(', ')
+      : 'various technical skills'
     const degree = resumeData.education[0]?.degree || 'Engineering'
 
-    const template = `${degree} student with a strong foundation in ${skills}. Eager to apply academic knowledge to real-world challenges. Quick learner with excellent problem-solving abilities and a passion for technology.`
+    const template = `${degree} student with a strong foundation in ${skillNames}. Eager to apply academic knowledge to real-world challenges. Quick learner with excellent problem-solving abilities and a passion for technology.`
     
     updateSummary(template)
   }
