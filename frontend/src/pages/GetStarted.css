@@ -6,9 +6,9 @@
 .hero-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  max-width: 1200px;
+  gap: 40px;
+  align-items: flex-start;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 80px 40px;
   min-height: 90vh;
@@ -117,54 +117,90 @@
   width: 70%;
 }
 
-/* How It Works */
+/* How It Works Section */
 .how-it-works {
   background: white;
-  padding: 80px 40px;
-  text-align: center;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .how-it-works h2 {
-  font-size: 36px;
-  margin-bottom: 48px;
+  font-size: 28px;
   color: #1a1a2e;
+  margin-bottom: 30px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.how-it-works h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
 }
 
 .steps {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  max-width: 1000px;
-  margin: 0 auto;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  flex-grow: 1;
 }
 
 .step {
-  padding: 32px 24px;
+  background: #f9f9ff;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .step-number {
-  width: 50px;
-  height: 50px;
+  min-width: 36px;
+  height: 36px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  font-size: 24px;
-  font-weight: bold;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content {
+  flex-grow: 1;
 }
 
 .step h3 {
-  font-size: 18px;
-  margin-bottom: 8px;
   color: #1a1a2e;
+  margin-bottom: 6px;
+  font-size: 16px;
 }
 
 .step p {
   color: #666;
   font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Responsive */

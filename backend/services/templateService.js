@@ -181,7 +181,8 @@ const formatCertificates = (certificates) => {
     content: formatted
   };
 };
-Format projects section
+/**
+ * Format projects section
  */
 const formatProjects = (projects) => {
   if (!projects || projects.length === 0) return null;
