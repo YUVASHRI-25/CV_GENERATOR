@@ -65,7 +65,86 @@ function Builder() {
   }
 
   const handleDownloadPDF = () => {
-    window.print()
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    
+    // Get the resume content
+    const resumeContent = document.getElementById('resume-to-print').outerHTML;
+    
+    // Create a print stylesheet
+    const printStyles = `
+      <style>
+        @page {
+          size: A4;
+          margin: 0;
+        }
+        body {
+          margin: 1.6cm;
+          font-family: 'Times New Roman', serif;
+          font-size: 11pt;
+          line-height: 1.5;
+        }
+        .resume-paper {
+          background: white;
+          padding: 40px;
+          box-shadow: none;
+        }
+        .section-title {
+          font-size: 14pt;
+          font-weight: bold;
+          border-bottom: 1px solid #000;
+          margin: 20px 0 10px 0;
+        }
+        .resume-name {
+          font-size: 22pt;
+          margin: 0 0 10px 0;
+        }
+        .resume-job-title {
+          font-size: 14pt;
+          margin-bottom: 10px;
+        }
+        .contact-info {
+          margin-bottom: 20px;
+        }
+        .skills-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .skill-item {
+          background: #f5f5f5;
+          padding: 4px 10px;
+          border-radius: 4px;
+          font-size: 10pt;
+        }
+      </style>
+    `;
+    
+    // Write the content to the new window
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Resume - ${resumeData.contact.name || 'My Resume'}</title>
+          ${printStyles}
+        </head>
+        <body>
+          ${resumeContent}
+          <script>
+            // Print and close the window after loading
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+                window.onafterprint = function() {
+                  window.close();
+                };
+              }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
   }
 
   const renderTabContent = () => {
