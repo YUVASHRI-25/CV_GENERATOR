@@ -209,6 +209,9 @@ export function ResumeProvider({ children }) {
     addCertificate,
     removeCertificate,
     updateSummary,
+    updateLanguages,
+    addCustomSection,
+    removeCustomSection,
     resetResume,
     
     // Auth data and functions
