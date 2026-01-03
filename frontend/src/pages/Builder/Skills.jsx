@@ -4,11 +4,26 @@ import { useResume } from '../../context/ResumeContext'
 function Skills() {
   const { resumeData, updateSkills } = useResume()
   const [newSkill, setNewSkill] = useState('')
+  const [proficiency, setProficiency] = useState('Beginner')
+  
+  // Proficiency levels
+  const proficiencyLevels = [
+    'Expert',
+    'Advanced',
+    'Intermediate',
+    'Beginner',
+    'None'
+  ]
 
   const handleAddSkill = () => {
-    if (newSkill.trim() && !resumeData.skills.includes(newSkill.trim())) {
-      updateSkills([...resumeData.skills, newSkill.trim()])
+    const skillName = newSkill.trim()
+    if (skillName && !resumeData.skills.some(skill => skill.name === skillName)) {
+      updateSkills([
+        ...resumeData.skills,
+        { name: skillName, level: proficiency }
+      ])
       setNewSkill('')
+      setProficiency('Beginner')
     }
   }
 
@@ -19,8 +34,16 @@ function Skills() {
     }
   }
 
-  const handleRemoveSkill = (skillToRemove) => {
-    updateSkills(resumeData.skills.filter(skill => skill !== skillToRemove))
+  const handleRemoveSkill = (index) => {
+    const updatedSkills = [...resumeData.skills]
+    updatedSkills.splice(index, 1)
+    updateSkills(updatedSkills)
+  }
+
+  const handleProficiencyChange = (index, newLevel) => {
+    const updatedSkills = [...resumeData.skills]
+    updatedSkills[index] = { ...updatedSkills[index], level: newLevel }
+    updateSkills(updatedSkills)
   }
 
   // Common skills suggestions
@@ -28,7 +51,7 @@ function Skills() {
     'Python', 'C', 'C++', 'Java', 'JavaScript',
     'HTML', 'CSS', 'React', 'Node.js', 'SQL',
     'Git', 'VS Code', 'Excel', 'Problem Solving', 'Communication'
-  ].filter(s => !resumeData.skills.includes(s))
+  ].filter(s => !resumeData.skills.some(skill => skill.name === s))
 
   return (
     <div className="tab-section">
@@ -45,7 +68,19 @@ function Skills() {
             onChange={(e) => setNewSkill(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="e.g., Python, HTML, Git..."
+            className="skill-input"
           />
+          <select
+            value={proficiency}
+            onChange={(e) => setProficiency(e.target.value)}
+            className="proficiency-select"
+          >
+            {proficiencyLevels.map(level => (
+              <option key={level} value={level}>
+                {level}
+              </option>
+            ))}
+          </select>
           <button 
             type="button" 
             className="add-btn"
@@ -60,17 +95,29 @@ function Skills() {
       {resumeData.skills.length > 0 && (
         <div className="skills-section">
           <h4>Your Skills ({resumeData.skills.length})</h4>
-          <div className="tags-list">
+          <div className="skills-list">
             {resumeData.skills.map((skill, index) => (
-              <span key={index} className="tag">
-                {skill}
+              <div key={index} className="skill-item">
+                <span className="skill-name">{skill.name}</span>
+                <select
+                  value={skill.level || 'Beginner'}
+                  onChange={(e) => handleProficiencyChange(index, e.target.value)}
+                  className="skill-level"
+                >
+                  {proficiencyLevels.map(level => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
                 <button 
-                  className="tag-remove"
-                  onClick={() => handleRemoveSkill(skill)}
+                  className="skill-remove"
+                  onClick={() => handleRemoveSkill(index)}
+                  title="Remove skill"
                 >
                   ×
                 </button>
-              </span>
+              </div>
             ))}
           </div>
         </div>
@@ -85,7 +132,7 @@ function Skills() {
               <button
                 key={index}
                 className="suggestion-btn"
-                onClick={() => updateSkills([...resumeData.skills, skill])}
+                onClick={() => updateSkills([...resumeData.skills, { name: skill, level: 'Beginner' }])}
               >
                 + {skill}
               </button>

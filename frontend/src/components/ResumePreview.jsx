@@ -35,7 +35,16 @@ function ResumePreview() {
         {skills.length > 0 && (
           <section className="resume-section">
             <h2 className="section-title">Technical Skills</h2>
-            <p className="skills-list">{skills.join(', ')}</p>
+            <div className="skills-list">
+              {skills.map((skill, index) => (
+                <div key={index} className="skill-item">
+                  <span className="skill-name">{skill.name}</span>
+                  {skill.level && skill.level !== 'None' && (
+                    <span className="skill-level">({skill.level})</span>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         )}
 

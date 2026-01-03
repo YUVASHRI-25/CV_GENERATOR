@@ -73,8 +73,35 @@
   text-align: justify;
 }
 
+/* Skills List */
 .skills-list {
-  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f5f5f5;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.skill-name {
+  font-weight: 500;
+}
+
+.skill-level {
+  color: #666;
+  font-size: 9px;
+  font-style: italic;
 }
 
 /* Items */
