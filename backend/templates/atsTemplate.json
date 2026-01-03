@@ -1,0 +1,90 @@
+{
+  "name": "ATS-Friendly Resume Template",
+  "version": "1.0.0",
+  "description": "Simple, clean ATS-optimized template for first-year engineering students",
+  
+  "layout": "single_column",
+  
+  "sections": [
+    "contact",
+    "summary",
+    "skills",
+    "education",
+    "internship",
+    "certificates"
+  ],
+  
+  "styling": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": {
+      "name": "24px",
+      "sectionTitle": "14px",
+      "body": "11px"
+    },
+    "margins": {
+      "top": "0.5in",
+      "bottom": "0.5in",
+      "left": "0.75in",
+      "right": "0.75in"
+    },
+    "lineHeight": "1.15",
+    "colors": {
+      "primary": "#000000",
+      "secondary": "#333333",
+      "accent": "#1a1a1a"
+    }
+  },
+  
+  "sectionConfig": {
+    "contact": {
+      "required": true,
+      "fields": ["name", "email", "phone"],
+      "optionalFields": ["linkedin", "github", "location"],
+      "layout": "centered"
+    },
+    "summary": {
+      "required": false,
+      "maxLength": 300,
+      "title": "Professional Summary"
+    },
+    "skills": {
+      "required": true,
+      "format": "comma_separated",
+      "title": "Technical Skills",
+      "categorize": false
+    },
+    "education": {
+      "required": true,
+      "fields": ["degree", "institution", "year"],
+      "optionalFields": ["gpa", "coursework"],
+      "title": "Education"
+    },
+    "internship": {
+      "required": false,
+      "fields": ["title", "company", "duration", "description"],
+      "bulletPoints": true,
+      "title": "Internship Experience"
+    },
+    "certificates": {
+      "required": false,
+      "fields": ["name", "issuer", "date"],
+      "title": "Certifications"
+    }
+  },
+  
+  "atsOptimizations": {
+    "noGraphics": true,
+    "noTables": true,
+    "noColumns": true,
+    "standardFonts": true,
+    "parseableDates": true,
+    "keywordOptimized": true
+  },
+  
+  "formatting": {
+    "sectionDivider": "line",
+    "bulletStyle": "•",
+    "dateFormat": "MMM YYYY",
+    "phoneFormat": "+91 XXXXX XXXXX"
+  }
+}
