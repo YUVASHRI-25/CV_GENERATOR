@@ -1,13 +1,24 @@
 import { useResume } from '../context/ResumeContext'
 import './ResumePreview.css'
 
-function ResumePreview() {
+function ResumePreview({ zoomLevel = 1 }) {
   const { resumeData } = useResume()
   const { contact, summary, skills, education, projects, internship, certificates, languages, customSections } = resumeData
+  
+  const zoomStyle = {
+    transform: `scale(${zoomLevel})`,
+    transformOrigin: 'top center',
+    transition: 'transform 0.2s ease-in-out',
+    width: `${100 / zoomLevel}%`,
+    margin: '0 auto',
+    height: 'fit-content',
+    padding: '20px 0'
+  }
 
   return (
-    <div className="resume-preview">
-      <div className="resume-paper" id="resume-to-print">
+    <div className="resume-preview" style={zoomLevel !== 1 ? { overflow: 'auto', maxHeight: '90vh' } : {}}>
+      <div style={zoomLevel !== 1 ? zoomStyle : {}}>
+        <div className="resume-paper" id="resume-to-print">
         {/* Contact / Header Section */}
         <header className="resume-header">
           <h1 className="resume-name">{contact.name || 'Your Name'}</h1>
@@ -155,6 +166,7 @@ function ResumePreview() {
             <p>Start filling in your details to see the preview</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   )

@@ -32,6 +32,19 @@ function Builder() {
   const [generating, setGenerating] = useState(false)
   const [generatedResume, setGeneratedResume] = useState(null)
   const [error, setError] = useState('')
+  const [zoomLevel, setZoomLevel] = useState(1)
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.1, 2)) // Max zoom 200%
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.1, 0.5)) // Min zoom 50%
+  }
+
+  const handleZoomReset = () => {
+    setZoomLevel(1) // Reset to 100%
+  }
 
   const currentTabIndex = TABS.findIndex(t => t.id === activeTab)
 
@@ -245,8 +258,37 @@ function Builder() {
 
         {/* Right Side - Preview */}
         <div className="builder-preview-section">
-          <h3 className="preview-title">📄 Live Preview</h3>
-          <ResumePreview />
+          <div className="preview-header">
+            <h3 className="preview-title">📄 Live Preview</h3>
+            <div className="zoom-controls">
+              <button 
+                className="zoom-btn" 
+                onClick={handleZoomOut}
+                title="Zoom Out"
+                disabled={zoomLevel <= 0.5}
+              >
+                ➖
+              </button>
+              <span className="zoom-level">{Math.round(zoomLevel * 100)}%</span>
+              <button 
+                className="zoom-btn" 
+                onClick={handleZoomIn}
+                title="Zoom In"
+                disabled={zoomLevel >= 2}
+              >
+                ➕
+              </button>
+              <button 
+                className="zoom-reset" 
+                onClick={handleZoomReset}
+                title="Reset Zoom"
+                disabled={zoomLevel === 1}
+              >
+                🔄
+              </button>
+            </div>
+          </div>
+          <ResumePreview zoomLevel={zoomLevel} />
         </div>
       </div>
     </div>
