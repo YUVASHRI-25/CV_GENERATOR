@@ -154,10 +154,89 @@
   height: fit-content;
 }
 
+.preview-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 .preview-title {
   font-size: 18px;
   color: #1a1a2e;
-  margin-bottom: 16px;
+  margin: 0;
+}
+
+.preview-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f7fa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+.zoom-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #e1e5eb;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.zoom-btn:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.zoom-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.zoom-level {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  min-width: 40px;
+  text-align: center;
+}
+
+.zoom-reset {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #e1e5eb;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  margin-left: 4px;
+}
+
+.zoom-reset:hover:not(:disabled) {
+  border-color: #667eea;
+}
+
+.zoom-reset:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Form Styles for Builder */
@@ -189,6 +268,42 @@
 
 .add-btn:hover {
   background: #5a6fd6;
+}
+
+/* Action Buttons Container */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Improve Button */
+.btn-improve {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-improve:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 80%);
+}
+
+.btn-improve:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Tags/Chips */

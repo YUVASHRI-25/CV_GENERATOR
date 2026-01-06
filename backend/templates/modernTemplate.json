@@ -1,0 +1,123 @@
+{
+  "name": "Modern Professional Template",
+  "version": "1.0.0",
+  "description": "A modern, visually appealing template with a sidebar layout and accent colors",
+  
+  "layout": "two_column",
+  
+  "sections": [
+    "contact",
+    "skills",
+    "languages",
+    "education",
+    "summary",
+    "internship",
+    "projects",
+    "certificates",
+    "custom"
+  ],
+  
+  "styling": {
+    "fontFamily": "'Segoe UI', Tahoma, Geneva, sans-serif",
+    "fontSize": {
+      "name": "28px",
+      "sectionTitle": "16px",
+      "body": "12px"
+    },
+    "margins": {
+      "top": "0in",
+      "bottom": "0in",
+      "left": "0in",
+      "right": "0in"
+    },
+    "lineHeight": "1.5",
+    "colors": {
+      "primary": "#2c3e50",
+      "secondary": "#34495e",
+      "accent": "#3498db",
+      "sidebar": "#2c3e50",
+      "sidebarText": "#ffffff",
+      "mainBackground": "#ffffff"
+    }
+  },
+  
+  "sectionConfig": {
+    "contact": {
+      "required": true,
+      "fields": ["name", "email", "phone"],
+      "optionalFields": ["linkedin", "github", "location", "jobTitle"],
+      "layout": "sidebar_header",
+      "showIcons": true
+    },
+    "summary": {
+      "required": false,
+      "maxLength": 400,
+      "title": "About Me",
+      "location": "main"
+    },
+    "skills": {
+      "required": true,
+      "format": "tags",
+      "title": "Skills",
+      "categorize": true,
+      "location": "sidebar"
+    },
+    "education": {
+      "required": true,
+      "fields": ["degree", "institution", "year"],
+      "optionalFields": ["gpa", "coursework"],
+      "title": "Education",
+      "location": "sidebar"
+    },
+    "internship": {
+      "required": false,
+      "fields": ["title", "company", "duration", "description"],
+      "bulletPoints": true,
+      "title": "Experience",
+      "location": "main"
+    },
+    "certificates": {
+      "required": false,
+      "fields": ["name", "issuer", "date"],
+      "title": "Certifications",
+      "location": "main"
+    },
+    "projects": {
+      "required": false,
+      "fields": ["name", "technologies", "duration", "description"],
+      "optionalFields": ["link"],
+      "bulletPoints": true,
+      "title": "Projects",
+      "location": "main"
+    },
+    "languages": {
+      "required": false,
+      "fields": ["name", "proficiency"],
+      "title": "Languages",
+      "showProgress": true,
+      "location": "sidebar"
+    },
+    "custom": {
+      "required": false,
+      "fields": ["title", "content"],
+      "title": "Additional",
+      "location": "main"
+    }
+  },
+  
+  "layoutConfig": {
+    "sidebarWidth": "35%",
+    "mainWidth": "65%",
+    "sidebarSections": ["contact", "skills", "languages", "education"],
+    "mainSections": ["summary", "internship", "projects", "certificates", "custom"]
+  },
+  
+  "atsOptimizations": {
+    "noGraphics": false,
+    "noTables": false,
+    "noColumns": false,
+    "standardFonts": true,
+    "parseableDates": true,
+    "note": "This template prioritizes visual appeal. For ATS optimization, use the ATS-Friendly template."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "name": "Minimal Clean Template",
+  "version": "1.0.0",
+  "description": "Ultra-clean minimalist design with maximum whitespace for a refined professional look",
+  
+  "layout": "single_column",
+  
+  "sections": [
+    "contact",
+    "summary",
+    "internship",
+    "projects",
+    "education",
+    "skills",
+    "certificates",
+    "languages",
+    "custom"
+  ],
+  
+  "styling": {
+    "fontFamily": "'Helvetica Neue', Arial, sans-serif",
+    "fontSize": {
+      "name": "32px",
+      "sectionTitle": "11px",
+      "body": "10px"
+    },
+    "margins": {
+      "top": "0.75in",
+      "bottom": "0.75in",
+      "left": "1in",
+      "right": "1in"
+    },
+    "lineHeight": "1.6",
+    "colors": {
+      "primary": "#1a1a1a",
+      "secondary": "#666666",
+      "accent": "#000000"
+    }
+  },
+  
+  "sectionConfig": {
+    "contact": {
+      "required": true,
+      "fields": ["name", "email", "phone"],
+      "optionalFields": ["linkedin", "github", "location"],
+      "layout": "inline"
+    },
+    "summary": {
+      "required": false,
+      "maxLength": 250,
+      "title": "PROFILE"
+    },
+    "skills": {
+      "required": true,
+      "format": "inline",
+      "title": "SKILLS",
+      "categorize": false
+    },
+    "education": {
+      "required": true,
+      "fields": ["degree", "institution", "year"],
+      "optionalFields": ["gpa"],
+      "title": "EDUCATION"
+    },
+    "internship": {
+      "required": false,
+      "fields": ["title", "company", "duration", "description"],
+      "bulletPoints": true,
+      "title": "EXPERIENCE"
+    },
+    "certificates": {
+      "required": false,
+      "fields": ["name", "issuer", "date"],
+      "title": "CERTIFICATIONS"
+    },
+    "projects": {
+      "required": false,
+      "fields": ["name", "technologies", "duration", "description"],
+      "optionalFields": ["link"],
+      "bulletPoints": true,
+      "title": "PROJECTS"
+    },
+    "languages": {
+      "required": false,
+      "fields": ["name", "proficiency"],
+      "title": "LANGUAGES"
+    },
+    "custom": {
+      "required": false,
+      "fields": ["title", "content"],
+      "title": "OTHER"
+    }
+  },
+  
+  "designFeatures": {
+    "uppercaseTitles": true,
+    "noSectionBorders": true,
+    "compactSpacing": true,
+    "lightWeight": true,
+    "extendedLetterSpacing": true
+  },
+  
+  "atsOptimizations": {
+    "noGraphics": true,
+    "noTables": true,
+    "noColumns": true,
+    "standardFonts": true,
+    "parseableDates": true
+  }
+}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useResume } from '../context/ResumeContext'
 import { resumeAPI } from '../services/api'
 import ResumePreview from '../components/ResumePreview'
+import TemplateSelector from '../components/TemplateSelector'
 
 // Builder Tab Components
 import Contact from './Builder/Contact'
@@ -16,6 +17,7 @@ import Additional from './Builder/Additional'
 import './Builder.css'
 
 const TABS = [
+  { id: 'template', label: 'Template', icon: '🎨' },
   { id: 'contact', label: 'Contact', icon: '👤' },
   { id: 'skills', label: 'Skills', icon: '💡' },
   { id: 'education', label: 'Education', icon: '🎓' },
@@ -27,12 +29,13 @@ const TABS = [
 ]
 
 function Builder() {
-  const { resumeData } = useResume()
-  const [activeTab, setActiveTab] = useState('contact')
+  const { resumeData, setResumeData } = useResume()
+  const [activeTab, setActiveTab] = useState('template')
   const [generating, setGenerating] = useState(false)
   const [generatedResume, setGeneratedResume] = useState(null)
   const [error, setError] = useState('')
   const [zoomLevel, setZoomLevel] = useState(1)
+  const [isImproving, setIsImproving] = useState(false)
 
   const handleZoomIn = () => {
     setZoomLevel(prev => Math.min(prev + 0.1, 2)) // Max zoom 200%
@@ -44,6 +47,90 @@ function Builder() {
 
   const handleZoomReset = () => {
     setZoomLevel(1) // Reset to 100%
+  }
+
+  const handleImproveResume = async () => {
+    if (isImproving) return;
+    
+    setIsImproving(true);
+    setError('');
+    
+    try {
+      // First, check if LLM service is available
+      const healthCheck = await resumeAPI.checkLLMHealth();
+      
+      if (!healthCheck.available) {
+        // If LLM service is not available, show a more helpful message
+        setError('The AI improvement service is currently unavailable. Please try again later or manually edit your resume.');
+        return;
+      }
+      
+      // Create a copy of the current resume data
+      const updatedResume = { ...resumeData };
+      let improvementsMade = false;
+      
+      // Improve summary if it exists
+      if (resumeData.summary) {
+        try {
+          const response = await resumeAPI.enhanceSummary({ 
+            text: resumeData.summary,
+            action: 'improve'
+          });
+          
+          if (response && response.success && response.enhancedText) {
+            updatedResume.summary = response.enhancedText;
+            improvementsMade = true;
+          }
+        } catch (err) {
+          console.warn('Error improving summary:', err);
+          // Continue with other improvements even if one fails
+        }
+      }
+      
+      // Improve projects if they exist
+      if (resumeData.projects?.length > 0) {
+        const improvedProjects = [];
+        
+        for (const project of resumeData.projects) {
+          if (project.description) {
+            try {
+              const response = await resumeAPI.enhanceSummary({ 
+                text: project.description,
+                action: 'improve_bullets'
+              });
+              
+              if (response?.success && response.enhancedText) {
+                improvedProjects.push({ ...project, description: response.enhancedText });
+                improvementsMade = true;
+              } else {
+                improvedProjects.push(project);
+              }
+            } catch (err) {
+              console.warn('Error improving project description:', err);
+              improvedProjects.push(project);
+            }
+          } else {
+            improvedProjects.push(project);
+          }
+        }
+        
+        updatedResume.projects = improvedProjects;
+      }
+      
+      // Only update if improvements were made
+      if (improvementsMade) {
+        setResumeData(updatedResume);
+        alert('Resume improved successfully! Your changes have been applied.');
+      } else {
+        setError('Unable to make improvements at this time. Please try again later or edit manually.');
+      }
+      
+    } catch (err) {
+      console.error('Error in improve resume process:', err);
+      setError('Failed to improve resume. The AI service may be unavailable. Please try again later.');
+    } finally {
+      setIsImproving(false);
+    }
   }
 
   const currentTabIndex = TABS.findIndex(t => t.id === activeTab)
@@ -162,6 +249,8 @@ function Builder() {
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case 'template':
+        return <TemplateSelector />
       case 'contact':
         return <Contact />
       case 'skills':
@@ -179,12 +268,15 @@ function Builder() {
       case 'additional':
         return <Additional />
       default:
-        return <Contact />
+        return <TemplateSelector />
     }
   }
 
   return (
     <div className="builder-page">
+      <div className="builder-header">
+        <h1>Resume Builder</h1>
+      </div>
       <div className="builder-container">
         {/* Left Side - Form */}
         <div className="builder-form-section">
@@ -228,13 +320,23 @@ function Builder() {
 
             {currentTabIndex === TABS.length - 1 ? (
               <div className="final-buttons">
-                <button 
-                  className="btn btn-primary generate-btn"
-                  onClick={handleGenerateResume}
-                  disabled={generating}
-                >
-                  {generating ? '⏳ Generating...' : '🚀 Generate Resume'}
-                </button>
+                <div className="action-buttons">
+                  <button 
+                    className="btn btn-primary generate-btn"
+                    onClick={handleGenerateResume}
+                    disabled={generating}
+                  >
+                    {generating ? '⏳ Generating...' : '🚀 Generate Resume'}
+                  </button>
+                  <button 
+                    className="btn btn-improve"
+                    onClick={handleImproveResume}
+                    disabled={isImproving}
+                    title="Improve grammar, bullet points, and remove weak phrases"
+                  >
+                    {isImproving ? '✨ Improving...' : '✨ Auto-Improve'}
+                  </button>
+                </div>
                 <button 
                   className="btn btn-download"
                   onClick={handleDownloadPDF}
@@ -260,32 +362,35 @@ function Builder() {
         <div className="builder-preview-section">
           <div className="preview-header">
             <h3 className="preview-title">📄 Live Preview</h3>
-            <div className="zoom-controls">
-              <button 
-                className="zoom-btn" 
-                onClick={handleZoomOut}
-                title="Zoom Out"
-                disabled={zoomLevel <= 0.5}
-              >
-                ➖
-              </button>
-              <span className="zoom-level">{Math.round(zoomLevel * 100)}%</span>
-              <button 
-                className="zoom-btn" 
-                onClick={handleZoomIn}
-                title="Zoom In"
-                disabled={zoomLevel >= 2}
-              >
-                ➕
-              </button>
-              <button 
-                className="zoom-reset" 
-                onClick={handleZoomReset}
-                title="Reset Zoom"
-                disabled={zoomLevel === 1}
-              >
-                🔄
-              </button>
+            <div className="preview-controls">
+              <TemplateSelector compact />
+              <div className="zoom-controls">
+                <button 
+                  className="zoom-btn" 
+                  onClick={handleZoomOut}
+                  title="Zoom Out"
+                  disabled={zoomLevel <= 0.5}
+                >
+                  ➖
+                </button>
+                <span className="zoom-level">{Math.round(zoomLevel * 100)}%</span>
+                <button 
+                  className="zoom-btn" 
+                  onClick={handleZoomIn}
+                  title="Zoom In"
+                  disabled={zoomLevel >= 2}
+                >
+                  ➕
+                </button>
+                <button 
+                  className="zoom-reset" 
+                  onClick={handleZoomReset}
+                  title="Reset Zoom"
+                  disabled={zoomLevel === 1}
+                >
+                  🔄
+                </button>
+              </div>
             </div>
           </div>
           <ResumePreview zoomLevel={zoomLevel} />

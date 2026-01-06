@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { DEFAULT_TEMPLATE, getTemplate } from '../templates/templates'
 
 // Initial empty resume state
 const initialResumeData = {
@@ -34,6 +35,25 @@ export function ResumeProvider({ children }) {
     const saved = localStorage.getItem('resumeData')
     return saved ? JSON.parse(saved) : initialResumeData
   })
+
+  // Template State - persisted separately from resume data
+  const [selectedTemplate, setSelectedTemplate] = useState(() => {
+    const saved = localStorage.getItem('selectedTemplate')
+    return saved || DEFAULT_TEMPLATE
+  })
+
+  // Get full template configuration
+  const currentTemplate = getTemplate(selectedTemplate)
+
+  // Save selected template to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('selectedTemplate', selectedTemplate)
+  }, [selectedTemplate])
+
+  // Change template (data persists, only visual changes)
+  const changeTemplate = (templateId) => {
+    setSelectedTemplate(templateId)
+  }
 
   // Auth State (simple version)
   const [user, setUser] = useState(() => {
@@ -213,6 +233,11 @@ export function ResumeProvider({ children }) {
     addCustomSection,
     removeCustomSection,
     resetResume,
+    
+    // Template data and functions
+    selectedTemplate,
+    currentTemplate,
+    changeTemplate,
     
     // Auth data and functions
     user,

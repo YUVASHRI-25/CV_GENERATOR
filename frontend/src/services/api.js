@@ -59,6 +59,20 @@ export const authAPI = {
 // ============ RESUME API ============
 
 export const resumeAPI = {
+  // Check if LLM service is available
+  checkLLMHealth: async () => {
+    try {
+      const response = await api.get('/resume/llm-health')
+      return { available: true, ...response.data }
+    } catch (error) {
+      console.error('LLM health check failed:', error)
+      return { 
+        available: false, 
+        error: error.response?.data?.error || 'LLM service unavailable' 
+      }
+    }
+  },
+
   // Generate complete resume
   generate: async (resumeData) => {
     const response = await api.post('/resume/generate', resumeData)
@@ -73,8 +87,16 @@ export const resumeAPI = {
 
   // Enhance summary using LLM
   enhanceSummary: async (data) => {
-    const response = await api.post('/resume/enhance-summary', data)
-    return response.data
+    try {
+      const response = await api.post('/resume/enhance-summary', data)
+      return response.data
+    } catch (error) {
+      console.error('Error enhancing summary:', error)
+      return { 
+        success: false, 
+        error: error.response?.data?.error || 'Failed to enhance text' 
+      }
+    }
   },
 
   // Download resume
